@@ -1,5 +1,5 @@
 ## Import libraries
-import gzip, re, sys, logging
+import gzip, re, sys, logging, shutil
 
 ## Configure loging with log file
 logging.basicConfig(filename="redactor_audit.log", level=logging.INFO, filemode='w')
@@ -36,7 +36,9 @@ def redact(gzin):
                     redacted_lines += 1
                 processed_lines += 1
 
-    # Write name, total lines processed, total lines redacted to log
+    ## Copy metadata to new file
+    shutil.copystat(gzin, gzout)
+    ## Write name, total lines processed, total lines redacted to log
     logging.info("Filename: " + gzin + "; Processed lines: " + str(processed_lines) + "; Redacted lines: " + str(redacted_lines))
 
 ## Loop through arguments, run the redact function on each file name ending in .gz
